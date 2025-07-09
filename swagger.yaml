@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Modrinth Mod Watcher API
+  description: API to monitor Minecraft mods for specific versions and notify via Discord.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000
+
+paths:
+  /add:
+    post:
+      summary: Add a mod to the watch list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mod_id
+                - minecraft_version
+              properties:
+                mod_id:
+                  type: string
+                minecraft_version:
+                  type: string
+      responses:
+        '201':
+          description: Mod successfully added
+        '400':
+          description: Missing or invalid parameters
+        '500':
+          description: Internal server error
+
+  /remove:
+    post:
+      summary: Remove a mod from the watch list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mod_id
+                - minecraft_version
+              properties:
+                mod_id:
+                  type: string
+                minecraft_version:
+                  type: string
+      responses:
+        '200':
+          description: Mod removed successfully
+        '404':
+          description: Mod not found
+        '500':
+          description: Internal server error
+
+  /list:
+    get:
+      summary: List all mods or filter by Minecraft version
+      parameters:
+        - name: minecraft_version
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter mods by Minecraft version
+      responses:
+        '200':
+          description: Success
+        '403':
+          description: Unsupported query parameter
+        '404':
+          description: No mods match the filter
